@@ -17,4 +17,6 @@ public class Universite {
     private Long idUniversite;
     private String nomUniversite;
     private String adresse;
+    @OneToOne(mappedBy = "universite")
+    private Foyer foyer;
 }
