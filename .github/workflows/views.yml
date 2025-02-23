@@ -10,8 +10,10 @@ jobs:
   update-readme:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repository
+    - name: Checkout hendzormati repository
       uses: actions/checkout@v2
+      with:
+        repository: hendzormati/hendzormati  # Specify the correct repository here
 
     - name: Get repo traffic data
       id: traffic
