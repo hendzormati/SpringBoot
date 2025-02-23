@@ -13,13 +13,13 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Get repo traffic data
+    - name: Get total repo traffic data
       id: traffic
       run: |
-        # Fetch traffic data from GitHub API
+        # Fetch total views and clones data from GitHub API
         VIEWS=$(curl -s -H "Authorization: token ${{ secrets.PAT_SECRET }}" https://api.github.com/repos/hendzormati/SpringBoot/traffic/views)
         CLONES=$(curl -s -H "Authorization: token ${{ secrets.PAT_SECRET }}" https://api.github.com/repos/hendzormati/SpringBoot/traffic/clones)
-        
+
         # Debugging the raw response
         echo "VIEWS Response: $VIEWS"
         echo "CLONES Response: $CLONES"
@@ -27,10 +27,10 @@ jobs:
         # Parse the counts from the API responses
         VIEWS_COUNT=$(echo $VIEWS | jq '.count')
         CLONES_COUNT=$(echo $CLONES | jq '.count')
-        
+
         # Output the counts for later use in the workflow
-        echo "Views: $VIEWS_COUNT"
-        echo "Clones: $CLONES_COUNT"
+        echo "Total Views: $VIEWS_COUNT"
+        echo "Total Clones: $CLONES_COUNT"
 
         # Set the output for later use
         echo "views_count=$VIEWS_COUNT" >> $GITHUB_ENV
@@ -45,11 +45,11 @@ jobs:
         README_CONTENT=$(cat README.md)
         
         # Replace placeholders with actual data
-        UPDATED_README=$(echo "$README_CONTENT" | sed "s/👁️ Total Views (last 14 days):.*/👁️ **Total Views** (last 14 days): **${{ env.views_count }}** views/")
-        UPDATED_README=$(echo "$UPDATED_README" | sed "s/🔄 Total Clones (last 14 days):.*/🔄 **Total Clones** (last 14 days): **${{ env.clones_count }}** clones/")
+        UPDATED_README=$(echo "$README_CONTENT" | sed "s/👁️ Total Views Since Creation:.*/👁️ **Total Views** Since Creation: **${{ env.views_count }}** views/")
+        UPDATED_README=$(echo "$UPDATED_README" | sed "s/🔄 Total Clones Since Creation:.*/🔄 **Total Clones** Since Creation: **${{ env.clones_count }}** clones/")
         
-        # Format date to Tunisia's local time
-        UPDATED_README=$(echo "$UPDATED_README" | sed "s/Last updated:.*/Last updated: **$(date +"%a %b %d %Y %T %Z")**/")
+        # Format the last updated date
+        UPDATED_README=$(echo "$UPDATED_README" | sed "s/Last updated:.*/Last traffic data update: **$(date +"%a, %b %d, %Y %T %Z")**/")
 
         # Write the updated README back to the file
         echo "$UPDATED_README" > README.md
