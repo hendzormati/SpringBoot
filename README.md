@@ -12,5 +12,5 @@ This repository is a **study project** following workshops to learn how to use *
 
 ---
 
-_Last updated: **Sun Feb 23 2025 23:32:48 CET**
+_Last traffic data update: **Sun, Feb 23, 2025 23:36:02 CET**
 
