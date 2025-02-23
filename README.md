@@ -11,8 +11,8 @@ By the end of this project, we should have a fully functional backend to connect
 
 ## Repository Traffic
 
-👁️ Total Views (last 14 days): **{{ views_count }}**  
-🔄 Total Clones (last 14 days): **{{ clones_count }}**
+👁️ Total Views (last 14 days): 76
+🔄 Total Clones (last 14 days): 18
 
-_Last updated: {{ last_updated }}_
+_Last updated: Sun Feb 23 22:28:07 UTC 2025
 
