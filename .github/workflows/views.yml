@@ -38,14 +38,19 @@ jobs:
 
     - name: Update README with traffic data
       run: |
+        # Set Tunisia timezone
+        export TZ="Africa/Tunis"
+        
         # Read the existing README file
         README_CONTENT=$(cat README.md)
         
         # Replace placeholders with actual data
         UPDATED_README=$(echo "$README_CONTENT" | sed "s/👁️ Total Views (last 14 days):.*/👁️ **Total Views** (last 14 days): **${{ env.views_count }}** views/")
         UPDATED_README=$(echo "$UPDATED_README" | sed "s/🔄 Total Clones (last 14 days):.*/🔄 **Total Clones** (last 14 days): **${{ env.clones_count }}** clones/")
-        UPDATED_README=$(echo "$UPDATED_README" | sed "s/Last updated:.*/Last updated: **$(date)** at $(date -u +"%H:%M UTC")/")
         
+        # Format date to Tunisia's local time
+        UPDATED_README=$(echo "$UPDATED_README" | sed "s/Last updated:.*/Last updated: **$(date +"%a %b %d %Y %T %Z")**/")
+
         # Write the updated README back to the file
         echo "$UPDATED_README" > README.md
 
