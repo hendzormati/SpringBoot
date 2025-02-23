@@ -2,7 +2,7 @@
 
 Welcome to the **SpringBoot** repository! This project is part of my workshop series for learning **Spring Boot** and how to build a backend service that integrates with an **Angular** frontend.
 
-[//]: # This repository serves as a foundation for the backend, and the **Angular repository** can be found here: [Angular Repository](https://github.com/hendzormati/Angular).
+<!-- This repository serves as a foundation for the backend, and the **Angular repository** can be found here: [Angular Repository](https://github.com/hendzormati/Angular). -->
 
 ## Repository Traffic Overview
 
