@@ -1,0 +1,47 @@
+name: Update Repository Traffic Stats
+
+on:
+  push:
+    paths:
+      - "README.md"
+  workflow_dispatch:
+
+jobs:
+  update-traffic:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: true
+
+      - name: Fetch Traffic Stats
+        run: |
+          OWNER="hendzormati"
+          REPO="SpringBoot"
+          TOKEN="${{ secrets.GITHUB_TOKEN }}"
+
+          # Fetch repo views
+          VIEWS=$(curl -s -H "Authorization: token $TOKEN" \
+            "https://api.github.com/repos/$OWNER/$REPO/traffic/views" | jq '.count')
+
+          # Fetch repo clones
+          CLONES=$(curl -s -H "Authorization: token $TOKEN" \
+            "https://api.github.com/repos/$OWNER/$REPO/traffic/clones" | jq '.count')
+
+          # Get current date
+          DATE=$(date +"%Y-%m-%d")
+
+          # Update README.md
+          sed -i "s|<!-- TRAFFIC-DATE -->.*<!-- /TRAFFIC-DATE -->|<!-- TRAFFIC-DATE -->$DATE<!-- /TRAFFIC-DATE -->|" README.md
+          sed -i "s|_Auto-updated below_ ⬇️|👁️ **Views (last 14 days):** $VIEWS  
+🔄 **Clones (last 14 days):** $CLONES|" README.md
+
+      - name: Commit & Push Changes
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add README.md
+          git commit -m "Auto-update traffic stats [$DATE]" || exit 0
+          git push
