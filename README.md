@@ -1,16 +1,39 @@
 # SpringBoot Repository
 
-This repository is a **study project** following workshops to learn how to use **Spring Boot**. It serves as a **functional backend** for use in an **Angular project**.
+Welcome to the **SpringBoot** repository! This project is part of my workshop series for learning **Spring Boot** and how to build a backend service that integrates with an **Angular** frontend.
 
-## 📊 Repository Traffic
+This repository serves as a foundation for the backend, and the **Angular repository** can be found here: [Angular Repository](https://github.com/hendzormati/Angular).
 
-### 👁️ **Total Views** (last 14 days):
-   **76** views
+## Repository Traffic Overview
 
-### 🔄 **Total Clones** (last 14 days):
-   **18** clones
+Here's the traffic overview for this repository:
+
+- 👁️ **Total Views** Since Creation: **76** views
+- 🔄 **Total Clones** Since Creation: **18** clones
 
 ---
 
-_Last traffic data update: **Sun, Feb 23, 2025 23:36:02 CET**
+Last traffic data update: **Sun, Feb 23, 2025 22:28:07 CET**
 
+---
+
+## Project Overview
+
+This repository is designed for educational purposes to guide you through creating a **Spring Boot backend** that can power an **Angular frontend**. Through this workshop, you’ll learn:
+
+- How to create REST APIs in Spring Boot.
+- How to connect the backend to a database.
+- How to integrate the backend with an Angular frontend for a full-stack application.
+
+### Repository Structure
+
+- **src**: Contains the source code for the Spring Boot backend.
+- **application.properties**: Configuration file for setting up the application.
+- **pom.xml**: Maven project configuration for dependency management.
+
+### Getting Started
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/hendzormati/SpringBoot.git
+   cd SpringBoot
