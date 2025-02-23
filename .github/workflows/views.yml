@@ -1,40 +1,33 @@
-name: Update Profile README with Repo Traffic
+name: Update Repo Traffic in README
 
 on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'  # Every 24 hours at midnight (UTC)
+  workflow_dispatch:  # Allows you to trigger the workflow manually from GitHub UI
 
 jobs:
   update-readme:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout hendzormati repository
+    - name: Checkout repository
       uses: actions/checkout@v2
-      with:
-        repository: hendzormati/hendzormati  # Specify the correct repository here
 
-    - name: Get repo traffic data
+    - name: Get traffic data for SpringBoot repo
       id: traffic
       run: |
-        # Fetch traffic data from GitHub API
+        # Fetch traffic data for the SpringBoot repository
         VIEWS=$(curl -s -H "Authorization: token ${{ secrets.PAT_SECRET }}" https://api.github.com/repos/hendzormati/SpringBoot/traffic/views)
         CLONES=$(curl -s -H "Authorization: token ${{ secrets.PAT_SECRET }}" https://api.github.com/repos/hendzormati/SpringBoot/traffic/clones)
-        
-        # Debugging the raw response
-        echo "VIEWS Response: $VIEWS"
-        echo "CLONES Response: $CLONES"
         
         # Parse the counts from the API responses
         VIEWS_COUNT=$(echo $VIEWS | jq '.count')
         CLONES_COUNT=$(echo $CLONES | jq '.count')
         
-        # Output the counts for later use in the workflow
+        # Output the counts for debugging purposes
         echo "Views: $VIEWS_COUNT"
         echo "Clones: $CLONES_COUNT"
-
-        # Set the output for later use
+        
+        # Set the counts as environment variables for later use
         echo "views_count=$VIEWS_COUNT" >> $GITHUB_ENV
         echo "clones_count=$CLONES_COUNT" >> $GITHUB_ENV
 
@@ -56,4 +49,4 @@ jobs:
       with:
         author_name: "GitHub Actions"
         author_email: "actions@github.com"
-        message: "Update README with latest repo traffic"
+        message: "Update README with latest repo traffic data"
