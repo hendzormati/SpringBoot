@@ -1,20 +1,19 @@
-name: Update Repository Traffic Stats
+name: Update Profile README with Repo Traffic
 
 on:
-  push:
-    paths:
-      - "README.md"
-  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"  # Runs once per day
+  workflow_dispatch:  # Allows manual trigger
 
 jobs:
-  update-traffic:
+  update-readme:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout SpringBoot Repo
         uses: actions/checkout@v3
         with:
-          persist-credentials: true
+          repository: hendzormati/SpringBoot
 
       - name: Fetch Traffic Stats
         run: |
@@ -33,15 +32,29 @@ jobs:
           # Get current date
           DATE=$(date +"%Y-%m-%d")
 
-          # Update README.md
-          sed -i "s|<!-- TRAFFIC-DATE -->.*<!-- /TRAFFIC-DATE -->|<!-- TRAFFIC-DATE -->$DATE<!-- /TRAFFIC-DATE -->|" README.md
-          sed -i "s|_Auto-updated below_ ⬇️|👁️ **Views (last 14 days):** $VIEWS  
-🔄 **Clones (last 14 days):** $CLONES|" README.md
+          # Save data to a file
+          echo "👁️ **Total Views (last 14 days):** $VIEWS" > traffic.txt
+          echo "🔄 **Total Clones (last 14 days):** $CLONES" >> traffic.txt
+          echo "_Last updated: **$DATE**_" >> traffic.txt
+
+      - name: Checkout Profile README Repo
+        uses: actions/checkout@v3
+        with:
+          repository: hendzormati/hendzormati
+          token: ${{ secrets.PAT_SECRET }}
+
+      - name: Update README
+        run: |
+          # Replace old traffic data in README.md
+          sed -i '/### 📊 Repository Stats/,/Last updated:/{
+            r traffic.txt
+            d
+          }' README.md
 
       - name: Commit & Push Changes
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
           git add README.md
-          git commit -m "Auto-update traffic stats [$DATE]" || exit 0
+          git commit -m "Auto-update repository traffic"
           git push
