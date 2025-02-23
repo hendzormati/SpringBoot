@@ -1,55 +1,57 @@
 name: Update Profile README with Repo Traffic
 
 on:
-  schedule:
-    - cron: "0 0 * * *"  # Run once every day at midnight
-  workflow_dispatch: # Trigger manually if needed
+  push:
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
   update-readme:
     runs-on: ubuntu-latest
-
     steps:
-      # Step 1: Check out the repository
-      - name: Checkout repository
-        uses: actions/checkout@v2
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-      # Step 2: Get repository traffic stats
-      - name: Get repo traffic data
-        id: traffic
-        run: |
-          VIEWS=$(curl -H "Authorization: token ${{ secrets.PAT_SECRET }}" https://api.github.com/repos/hendzormati/SpringBoot/traffic/views)
-          CLONES=$(curl -H "Authorization: token ${{ secrets.PAT_SECRET }}" https://api.github.com/repos/hendzormati/SpringBoot/traffic/clones)
-          echo "::set-output name=views::$VIEWS"
-          echo "::set-output name=clones::$CLONES"
+    - name: Get repo traffic data
+      id: traffic
+      run: |
+        # Fetch traffic data from GitHub API
+        VIEWS=$(curl -H "Authorization: token ${{ secrets.PAT_SECRET }}" https://api.github.com/repos/hendzormati/SpringBoot/traffic/views)
+        CLONES=$(curl -H "Authorization: token ${{ secrets.PAT_SECRET }}" https://api.github.com/repos/hendzormati/SpringBoot/traffic/clones)
+        
+        # Debugging the raw response
+        echo "VIEWS Response: $VIEWS"
+        echo "CLONES Response: $CLONES"
+        
+        # Parse the counts from the API responses
+        VIEWS_COUNT=$(echo $VIEWS | jq '.count')
+        CLONES_COUNT=$(echo $CLONES | jq '.count')
+        
+        # Output the counts
+        echo "Views: $VIEWS_COUNT"
+        echo "Clones: $CLONES_COUNT"
 
-      # Step 3: Extract count from the traffic data
-      - name: Extract traffic counts
-        id: traffic_counts
-        run: |
-          VIEWS_COUNT=$(echo ${{ steps.traffic.outputs.views }} | jq '.count')
-          CLONES_COUNT=$(echo ${{ steps.traffic.outputs.clones }} | jq '.count')
-          echo "Views: $VIEWS_COUNT"
-          echo "Clones: $CLONES_COUNT"
-          echo "::set-output name=views_count::$VIEWS_COUNT"
-          echo "::set-output name=clones_count::$CLONES_COUNT"
+        # Set the output for later use
+        echo "::set-output name=views_count::$VIEWS_COUNT"
+        echo "::set-output name=clones_count::$CLONES_COUNT"
 
-      # Step 4: Update the README file
-      - name: Update README.md with traffic data
-        run: |
-          echo "👁️ **Total Views (last 14 days):** ${{ steps.traffic_counts.outputs.views_count }}" > traffic.txt
-          echo "🔄 **Total Clones (last 14 days):** ${{ steps.traffic_counts.outputs.clones_count }}" >> traffic.txt
-          echo "_Last updated: $(date +'%Y-%m-%d')_" >> traffic.txt
-          sed -i '/### 📊 Repository Stats/,/Last updated:/{
-            r traffic.txt
-            d
-          }' README.md
+    - name: Update README with traffic data
+      run: |
+        # Read the existing README
+        README_CONTENT=$(cat README.md)
 
-      # Step 5: Commit the updated README
-      - name: Commit and push changes
-        run: |
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
-          git add README.md
-          git commit -m "Update profile README with repo traffic"
-          git push
+        # Replace placeholders with actual data
+        UPDATED_README=$(echo "$README_CONTENT" | sed "s/👁️ Total Views (last 14 days):.*/👁️ Total Views (last 14 days): ${{ steps.traffic.outputs.views_count }}/")
+        UPDATED_README=$(echo "$UPDATED_README" | sed "s/🔄 Total Clones (last 14 days):.*/🔄 Total Clones (last 14 days): ${{ steps.traffic.outputs.clones_count }}/")
+        UPDATED_README=$(echo "$UPDATED_README" | sed "s/Last updated:.*/Last updated: $(date)/")
+
+        # Write the updated README back to the file
+        echo "$UPDATED_README" > README.md
+
+    - name: Commit and push changes
+      uses: EndBug/add-and-commit@v7
+      with:
+        author_name: "GitHub Actions"
+        author_email: "actions@github.com"
+        message: "Update README with latest repo traffic"
