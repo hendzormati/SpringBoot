@@ -2,59 +2,54 @@ name: Update Profile README with Repo Traffic
 
 on:
   schedule:
-    - cron: "0 0 * * *"  # Runs once per day
-  workflow_dispatch:  # Allows manual trigger
+    - cron: "0 0 * * *"  # Run once every day at midnight
+  workflow_dispatch: # Trigger manually if needed
 
 jobs:
   update-readme:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout SpringBoot Repo
-        uses: actions/checkout@v3
-        with:
-          repository: hendzormati/SpringBoot
+      # Step 1: Check out the repository
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-      - name: Fetch Traffic Stats
+      # Step 2: Get repository traffic stats
+      - name: Get repo traffic data
+        id: traffic
         run: |
-          OWNER="hendzormati"
-          REPO="SpringBoot"
-          TOKEN="${{ secrets.GITHUB_TOKEN }}"
+          VIEWS=$(curl -H "Authorization: token ${{ secrets.PAT_SECRET }}" https://api.github.com/repos/hendzormati/SpringBoot/traffic/views)
+          CLONES=$(curl -H "Authorization: token ${{ secrets.PAT_SECRET }}" https://api.github.com/repos/hendzormati/SpringBoot/traffic/clones)
+          echo "::set-output name=views::$VIEWS"
+          echo "::set-output name=clones::$CLONES"
 
-          # Fetch repo views
-          VIEWS=$(curl -s -H "Authorization: token $TOKEN" \
-            "https://api.github.com/repos/$OWNER/$REPO/traffic/views" | jq '.count')
-
-          # Fetch repo clones
-          CLONES=$(curl -s -H "Authorization: token $TOKEN" \
-            "https://api.github.com/repos/$OWNER/$REPO/traffic/clones" | jq '.count')
-
-          # Get current date
-          DATE=$(date +"%Y-%m-%d")
-
-          # Save data to a file
-          echo "👁️ **Total Views (last 14 days):** $VIEWS" > traffic.txt
-          echo "🔄 **Total Clones (last 14 days):** $CLONES" >> traffic.txt
-          echo "_Last updated: **$DATE**_" >> traffic.txt
-
-      - name: Checkout Profile README Repo
-        uses: actions/checkout@v3
-        with:
-          repository: hendzormati/hendzormati
-          token: ${{ secrets.PAT_SECRET }}
-
-      - name: Update README
+      # Step 3: Extract count from the traffic data
+      - name: Extract traffic counts
+        id: traffic_counts
         run: |
-          # Replace old traffic data in README.md
+          VIEWS_COUNT=$(echo ${{ steps.traffic.outputs.views }} | jq '.count')
+          CLONES_COUNT=$(echo ${{ steps.traffic.outputs.clones }} | jq '.count')
+          echo "Views: $VIEWS_COUNT"
+          echo "Clones: $CLONES_COUNT"
+          echo "::set-output name=views_count::$VIEWS_COUNT"
+          echo "::set-output name=clones_count::$CLONES_COUNT"
+
+      # Step 4: Update the README file
+      - name: Update README.md with traffic data
+        run: |
+          echo "👁️ **Total Views (last 14 days):** ${{ steps.traffic_counts.outputs.views_count }}" > traffic.txt
+          echo "🔄 **Total Clones (last 14 days):** ${{ steps.traffic_counts.outputs.clones_count }}" >> traffic.txt
+          echo "_Last updated: $(date +'%Y-%m-%d')_" >> traffic.txt
           sed -i '/### 📊 Repository Stats/,/Last updated:/{
             r traffic.txt
             d
           }' README.md
 
-      - name: Commit & Push Changes
+      # Step 5: Commit the updated README
+      - name: Commit and push changes
         run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
           git add README.md
-          git commit -m "Auto-update repository traffic"
+          git commit -m "Update profile README with repo traffic"
           git push
