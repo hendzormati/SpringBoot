@@ -10,4 +10,6 @@ public interface IFoyerService {
     public Foyer addFoyer(Foyer c);
     public void removeFoyer(Long foyerId);
     public Foyer modifyFoyer(Foyer foyer);
+    public  void affecterBlocaFoyer(Long idFoyer,Long idBloc);
+    public  void désaffecterBlocaFoyer(Long idFoyer,Long idBloc);
 }

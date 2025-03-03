@@ -46,6 +46,15 @@ public class FoyerRestController {
         Foyer foyer = foyerService.modifyFoyer(c);
         return foyer;
     }
-
+    @PutMapping("/affecter-foyer-a-bloc-/{foyer-id}/{bloc-id}")
+    public void assignProjetToEquipe(@PathVariable("foyer-id") Long foyerId,
+                                     @PathVariable("bloc-id") Long blocId) {
+        foyerService.affecterBlocaFoyer(foyerId, blocId);
+    }
+    @PutMapping("/désaffecter-foyer-from-bloc-/{foyer-id}/{bloc-id}")
+    public void desaffecterProjetFromEquipe(@PathVariable("foyer-id") Long foyerId,
+                                            @PathVariable("bloc-id") Long blocId) {
+        foyerService.désaffecterBlocaFoyer(foyerId, blocId);
+    }
 
 }

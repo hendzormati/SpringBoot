@@ -35,6 +35,11 @@ public class BlocRestController {
         Bloc bloc = blocService.addBloc(c);
         return bloc;
     }
+    @PostMapping("/add-bloc-foyer")
+    public Bloc addBlocandfoyer(@RequestBody Bloc c) {
+        Bloc bloc = blocService.addBlocandFoyer(c);
+        return bloc;
+    }
     // http://localhost:8089/tpfoyer/bloc/remove-bloc/{bloc-id}
     @DeleteMapping("/remove-bloc/{bloc-id}")
     public void removeBloc(@PathVariable("bloc-id") Long chId) {

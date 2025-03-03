@@ -21,7 +21,7 @@ public class Foyer {
     private Long capaciteFoyer;
     @OneToOne
     private Universite universite;
-    @OneToMany(mappedBy = "foyer")
+    @OneToMany(mappedBy = "foyer",cascade = CascadeType.ALL)
     private List<Bloc> blocs;
 
     public Long getIdFoyer() {

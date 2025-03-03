@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tn.esprit.tpfoyer.entity.Bloc;
 import tn.esprit.tpfoyer.repository.BlocRepository;
+import tn.esprit.tpfoyer.repository.FoyerRepository;
 
 import java.util.List;
 
@@ -13,6 +14,8 @@ import java.util.List;
 public class BlocService implements IBlocService{
     @Autowired
     BlocRepository blocRepo;
+    @Autowired
+    FoyerRepository foyerRepo;
     @Override
     public List<Bloc> retrieveAllBlocs() {
         return blocRepo.findAll();
@@ -34,6 +37,12 @@ public class BlocService implements IBlocService{
 
     @Override
     public Bloc modifyBloc(Bloc bloc) {
+        return blocRepo.save(bloc);
+    }
+
+    @Override
+    public Bloc addBlocandFoyer(Bloc bloc) {
+        foyerRepo.save(bloc.getFoyer());
         return blocRepo.save(bloc);
     }
 }
