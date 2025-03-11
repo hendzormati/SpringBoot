@@ -4,10 +4,15 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
+import tn.esprit.tpfoyer.entity.Chambre;
 import tn.esprit.tpfoyer.entity.Etudiant;
+import tn.esprit.tpfoyer.entity.TypeChambre;
+import tn.esprit.tpfoyer.entity.Universite;
 import tn.esprit.tpfoyer.service.IEtudiantService;
 
+import java.util.Date;
 import java.util.List;
 @Tag(name = "Gestion Etudiant")
 @RestController
@@ -21,6 +26,16 @@ public class EtudiantRestController {
     @GetMapping("/retrieve-all-etudiants")
     public List<Etudiant> getEtudiants() {
         List<Etudiant> listEtudiants = etudiantService.retrieveAllEtudiants();
+        return listEtudiants;
+    }
+    @GetMapping("/retrieve-all-etudiants-by-uni")
+    public List<Etudiant> getEtudiantsbyuni(@RequestParam Long uni_ID) {
+        List<Etudiant> listEtudiants = etudiantService.retrieveAllEtudiantsByUni(uni_ID);
+        return listEtudiants;
+    }
+    @GetMapping("/retrieve-all-etudiants-by-uni-and-date")
+    public List<Etudiant> getEtudiantsbyunianddate(@RequestParam Long uni_ID, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date date) {
+        List<Etudiant> listEtudiants = etudiantService.retrieveAllEtudiantsByUniandDate(uni_ID,date);
         return listEtudiants;
     }
     // http://localhost:8089/tpfoyer/etudiant/retrieve-etudiant/8

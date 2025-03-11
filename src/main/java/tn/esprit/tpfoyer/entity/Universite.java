@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -19,7 +21,8 @@ public class Universite {
     private String adresse;
     @OneToOne(mappedBy = "universite")
     private Foyer foyer;
-
+    @OneToMany(mappedBy = "universite")
+    private List<Etudiant> etudiants;
     public Long getIdUniversite() {
         return idUniversite;
     }

@@ -25,6 +25,8 @@ public class Etudiant {
     private Date dateNaissance;
     @ManyToMany(mappedBy = "etudiants")
     private List<Reservation> reservations;
+    @ManyToOne
+    private Universite universite;
 
     public Long getIdEtudiant() {
         return idEtudiant;
@@ -80,5 +82,13 @@ public class Etudiant {
 
     public void setReservations(List<Reservation> reservations) {
         this.reservations = reservations;
+    }
+
+    public Universite getUniversite() {
+        return universite;
+    }
+
+    public void setUniversite(Universite universite) {
+        this.universite = universite;
     }
 }

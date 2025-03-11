@@ -4,8 +4,11 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tn.esprit.tpfoyer.entity.Etudiant;
+import tn.esprit.tpfoyer.entity.Universite;
 import tn.esprit.tpfoyer.repository.EtudiantRepository;
+import tn.esprit.tpfoyer.repository.UniversiteRepository;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -13,10 +16,23 @@ import java.util.List;
 public class EtudiantService implements IEtudiantService{
     @Autowired
     EtudiantRepository etudiantRepo;
+    @Autowired
+    UniversiteRepository uniRepo;
     @Override
     public List<Etudiant> retrieveAllEtudiants() {
         return etudiantRepo.findAll();
     }
+
+    @Override
+    public List<Etudiant> retrieveAllEtudiantsByUni(Long universiteID) {
+        return etudiantRepo.findAllByUniversite(uniRepo.findById(universiteID).get());
+    }
+
+    @Override
+    public List<Etudiant> retrieveAllEtudiantsByUniandDate(Long universiteID, Date date) {
+        return etudiantRepo.findAllByUniversiteAndDateNaissance(uniRepo.findById(universiteID).get(),date);
+    }
+
     @Override
     public Etudiant retrieveEtudiant(Long etudiantId) {
         return etudiantRepo.findById(etudiantId).get();

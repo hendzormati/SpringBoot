@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.tpfoyer.entity.Chambre;
+import tn.esprit.tpfoyer.entity.TypeChambre;
 import tn.esprit.tpfoyer.service.IChambreService;
 
 import java.util.List;
@@ -25,10 +26,20 @@ public class ChambreRestController {
         List<Chambre> listChambres = chambreService.retrieveAllChambres();
         return listChambres;
     }
+    @GetMapping("/retrieve-all-chambres-by-type")
+    public List<Chambre> getChambresbytype(@RequestParam TypeChambre type) {
+        List<Chambre> listChambres = chambreService.retrieveAllChambresbytype(type);
+        return listChambres;
+    }
     // http://localhost:8089/tpfoyer/chambre/retrieve-chambre/8
     @GetMapping("/retrieve-chambre/{chambre-id}")
     public Chambre retrieveChambre(@PathVariable("chambre-id") Long chId) {
         Chambre chambre = chambreService.retrieveChambre(chId);
+        return chambre;
+    }
+    @GetMapping("/retrieve-chambre-by-num/{chambre-num}")
+    public Chambre retrieveChambrebynum(@PathVariable("chambre-num") Long num) {
+        Chambre chambre = chambreService.retrieveChambreBynumero(num);
         return chambre;
     }
     // http://localhost:8089/tpfoyer/chambre/add-chambre
