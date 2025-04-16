@@ -13,4 +13,7 @@ public interface IChambreService {
     public Chambre addChambre(Chambre c);
     public void removeChambre(Long chambreId);
     public Chambre modifyChambre(Chambre chambre);
+    public void listeChambresParBloc();
+    public void pourcentageChambreParTypeChambre();
+    public void nombrePlacesDispoParchambreAnneeEnCours();
 }

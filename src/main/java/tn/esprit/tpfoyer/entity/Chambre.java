@@ -62,4 +62,13 @@ public class Chambre {
     public void setBloc(Bloc bloc) {
         this.bloc = bloc;
     }
+
+    @Override
+    public String toString() {
+        return "\nChambre{" +
+                "\n idChambre=" + idChambre +
+                "\n numeroChambre=" + numeroChambre +
+                "\n typeC=" + typeC +
+                '}';
+    }
 }
