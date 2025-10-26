@@ -8,14 +8,14 @@ Welcome to the **SpringBoot** repository! This project is part of my workshop se
 
 Here's the traffic overview for this repository:
 
-- 👁️ **Total Views** Since Creation: **124** views
+- 👁️ **Total Views** Since Creation: **127** views
 - 🔄 **Total Clones** Since Creation: **97** clones
-- 📈 **Recent Views** (Last 14 days): **5** views
-- 📊 **Recent Clones** (Last 14 days): **21** clones
+- 📈 **Recent Views** (Last 14 days): **8** views
+- 📊 **Recent Clones** (Last 14 days): **18** clones
 
 ---
 
-Last traffic data update: **Sun Oct 19 2025 02:46:52 CET**
+Last traffic data update: **Sun Oct 26 2025 02:43:49 CET**
 
 ---
 
